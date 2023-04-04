@@ -31,7 +31,8 @@ app.handleReqRes=(req,res)=>{
     // get the url and parsed it
     const parsedUrl = url.parse(req.url, true)
     const path = parsedUrl.pathname
-    const trimmedPath = path.replace()
+    const trimmedPath = path.replace(/^\/+|\/+$/g, '')
+    console.log(trimmedPath);
 
     // handle Response
     res.end('hello programers');
