@@ -10,6 +10,7 @@ const url = require('url');
 const {StringDecoder} = require('string_decoder');
 const routes = require('../routes');
 const {notFoundHandler} = require('../handlers/routeHandlers/notFoundHandler');
+const {parseJSON}= require('../helpers/utilities')
 
 // module - scaffolding
 const handler = {};
@@ -19,7 +20,7 @@ handler.handleReqRes=(req,res)=>{
     // get the url and parsed it
     const parsedUrl = url.parse(req.url, true);
     const path = parsedUrl.pathname;
-    const trimmedPath = path.replace(/^\/+|\/+$/g, '');
+    const trimmedPath = path.replace(/^\/+|\/+$/g, ''); 
     const method = req.method.toLowerCase();
     const queryStringObject = parsedUrl.query;
     const headersObject = req.header;
@@ -37,16 +38,6 @@ handler.handleReqRes=(req,res)=>{
     let realData = '';
 
     const chosenHandler = routes[trimmedPath]? routes[trimmedPath] : notFoundHandler;
-    chosenHandler(requestProperties,(statusCode, payload)=>{
-        statusCode = typeof(statusCode) === 'number'? statusCode : 500;
-        payload= typeof(payload) === 'object'? payload : {};
-
-        const payloadString = JSON.stringify(payload);
-
-        // return the final Response
-        res.writeHead(statusCode)
-        res.end(payloadString);
-    });
 
     req.on('data', (buffer)=>{
         realData += decoder.write(buffer)
@@ -54,10 +45,20 @@ handler.handleReqRes=(req,res)=>{
 
     req.on('end',()=>{
         realData += decoder.end();
-        console.log(realData);
+        requestProperties.body = parseJSON(realData);
+        chosenHandler(requestProperties,(statusCode, payload)=>{
+            statusCode = typeof(statusCode) === 'number'? statusCode : 500;
+            payload= typeof(payload) === 'object'? payload : {};
+    
+            const payloadString = JSON.stringify(payload);
+    
+            // return the final Response
+            res.setHeader('Content-Type','application/json');
+            res.writeHead(statusCode)
+            res.end(payloadString);
+            
+        });
 
-        // handle Response
-        res.end('hello programers');
     })
 
 
