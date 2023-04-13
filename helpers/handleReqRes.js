@@ -23,7 +23,7 @@ handler.handleReqRes=(req,res)=>{
     const trimmedPath = path.replace(/^\/+|\/+$/g, ''); 
     const method = req.method.toLowerCase();
     const queryStringObject = parsedUrl.query;
-    const headersObject = req.header;
+    const headersObject = req.headers;
 
     const requestProperties = {
         parsedUrl,
