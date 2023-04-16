@@ -11,13 +11,23 @@ const environments = {};
 environments.staging = {
     port: 8000,
     envName: 'staging',
-    secretKey: 'hsjhsgatghjj'
+    secretKey: 'hsjhsgatghjj',
+    twilio: {
+        fromPhone: '+15005550006',
+        accountSid: 'AC9bdeb7f61af0e98d5c00049beb42005c',
+        authToken: 'c98b490f0f4cf8403e9e6fb785b34b84'
+    }
 };
 
 environments.production = {
     port: 5000,
     envName: 'production',
-    secretKey: 'hsjhsghgfhgfjdh'
+    secretKey: 'hsjhsghgfhgfjdh',
+    twilio: {
+        fromPhone: '+15005550006',
+        accountSid: 'AC9bdeb7f61af0e98d5c00049beb42005c',
+        authToken: 'c98b490f0f4cf8403e9e6fb785b34b84'
+    }
 
 }
 
